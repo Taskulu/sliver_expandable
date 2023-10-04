@@ -79,9 +79,9 @@ class _WithStateAnimatedSliverExpandableState
 
   void _onCollapsedChange() {
     if (widget.collapsed) {
-      controller.animateTo(1, duration: widget.duration);
-    } else {
       controller.animateBack(0, duration: widget.duration);
+    } else {
+      controller.animateTo(1, duration: widget.duration);
     }
   }
 
