@@ -51,14 +51,71 @@ class _AnimatedSliverExpandableState extends State<AnimatedSliverExpandable>
   }
 }
 
+class WithStateAnimatedSliverExpandable extends StatefulWidget {
+  final Widget sliver;
+  final Duration duration;
+  final Curve curve;
+  final double translationOffset;
+  final bool collapsed;
+
+  const WithStateAnimatedSliverExpandable({
+    super.key,
+    required this.sliver,
+    required this.collapsed,
+    this.duration = const Duration(milliseconds: 250),
+    this.curve = Curves.easeInOut,
+    this.translationOffset = 200,
+  });
+
+  @override
+  State<WithStateAnimatedSliverExpandable> createState() =>
+      _WithStateAnimatedSliverExpandableState();
+}
+
+class _WithStateAnimatedSliverExpandableState
+    extends State<WithStateAnimatedSliverExpandable>
+    with SingleTickerProviderStateMixin {
+  late final controller = AnimationController(vsync: this);
+
+  void _onToggle() {
+    if (controller.status == AnimationStatus.completed ||
+        controller.status == AnimationStatus.forward) {
+      controller.animateBack(0, duration: widget.duration);
+    } else {
+      controller.animateTo(1, duration: widget.duration);
+    }
+  }
+
+  @override
+  void didUpdateWidget(covariant WithStateAnimatedSliverExpandable oldWidget) {
+    if (oldWidget.collapsed != widget.collapsed) _onToggle();
+    super.didUpdateWidget(oldWidget);
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final curvedAnimation = CurvedAnimation(
+      curve: widget.curve,
+      parent: controller,
+    );
+
+    return SliverExpandable(
+      animation: curvedAnimation,
+      header: const SizedBox(),
+      sliver: widget.sliver,
+    );
+  }
+}
+
 class SliverExpandable extends RenderObjectWidget {
   final Animation<double> animation;
-  final Widget header, sliver;
+  final Widget? header;
+  final Widget sliver;
   final double translationOffset;
 
   const SliverExpandable({
     super.key,
-    required this.header,
+    this.header,
     required this.sliver,
     required this.animation,
     this.translationOffset = 200,
