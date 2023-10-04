@@ -75,7 +75,10 @@ class WithStateAnimatedSliverExpandable extends StatefulWidget {
 class _WithStateAnimatedSliverExpandableState
     extends State<WithStateAnimatedSliverExpandable>
     with SingleTickerProviderStateMixin {
-  late final controller = AnimationController(vsync: this);
+  late final controller = AnimationController(
+    vsync: this,
+    value: widget.collapsed ? 0 : 1,
+  );
 
   void _onCollapsedChange() {
     if (widget.collapsed) {
