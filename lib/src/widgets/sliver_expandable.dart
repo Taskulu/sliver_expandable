@@ -77,18 +77,17 @@ class _WithStateAnimatedSliverExpandableState
     with SingleTickerProviderStateMixin {
   late final controller = AnimationController(vsync: this);
 
-  void _onToggle() {
-    if (controller.status == AnimationStatus.completed ||
-        controller.status == AnimationStatus.forward) {
-      controller.animateBack(0, duration: widget.duration);
-    } else {
+  void _onCollapsedChange() {
+    if (widget.collapsed) {
       controller.animateTo(1, duration: widget.duration);
+    } else {
+      controller.animateBack(0, duration: widget.duration);
     }
   }
 
   @override
   void didUpdateWidget(covariant WithStateAnimatedSliverExpandable oldWidget) {
-    if (oldWidget.collapsed != widget.collapsed) _onToggle();
+    if (oldWidget.collapsed != widget.collapsed) _onCollapsedChange();
     super.didUpdateWidget(oldWidget);
   }
 
