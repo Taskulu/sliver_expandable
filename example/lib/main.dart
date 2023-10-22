@@ -22,8 +22,15 @@ class MyApp extends StatelessWidget {
   }
 }
 
-class MyHomePage extends StatelessWidget {
+class MyHomePage extends StatefulWidget {
   const MyHomePage({super.key});
+
+  @override
+  State<MyHomePage> createState() => _MyHomePageState();
+}
+
+class _MyHomePageState extends State<MyHomePage> {
+  bool _expanded = false;
 
   @override
   Widget build(BuildContext context) {
@@ -46,8 +53,9 @@ class MyHomePage extends StatelessWidget {
             childCount: 5,
           )),
           AnimatedSliverExpandable(
-            headerBuilder: (context, animation, onToggle) => ListTile(
-              onTap: onToggle,
+            expanded: _expanded,
+            headerBuilder: (context, animation) => ListTile(
+              onTap: () => setState(() => _expanded = !_expanded),
               tileColor: Colors.amber,
               title: const Text('Expandable'),
               trailing: AnimatedBuilder(
