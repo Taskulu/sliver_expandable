@@ -9,15 +9,16 @@ Sliver Expandable lets expand and collapse any Sliver in Flutter.
 1. Add it to your `pubspec.yaml`:
 
 ```yaml
-sliver_expandable: ^0.0.1
+sliver_expandable: ^1.0.0
 ```
 
 2. Use it:
 
 ```dart
 AnimatedSliverExpandable(
-  headerBuilder: (context, animation, onToggle) => ListTile(
-    onTap: onToggle,
+  expanded: _expanded,
+  headerBuilder: (context, animation) => ListTile(
+    onTap: () => setState(() => _expanded = !_expanded),
     tileColor: Colors.amber,
     title: const Text('Expandable'),
     trailing: AnimatedBuilder(

@@ -3,19 +3,21 @@ import 'package:flutter/rendering.dart';
 import 'package:sliver_expandable/src/rendering/render_sliver_expandable.dart';
 
 typedef SliverExpandableHeaderBuilder = Widget Function(
-    BuildContext context, Animation<double> animation, VoidCallback onToggle);
+    BuildContext context, Animation<double> animation);
 
 class AnimatedSliverExpandable extends StatefulWidget {
   final Widget sliver;
-  final SliverExpandableHeaderBuilder headerBuilder;
   final Duration duration;
   final Curve curve;
   final double translationOffset;
+  final bool expanded;
+  final SliverExpandableHeaderBuilder? headerBuilder;
 
   const AnimatedSliverExpandable({
     super.key,
-    required this.headerBuilder,
     required this.sliver,
+    this.headerBuilder,
+    this.expanded = false,
     this.duration = const Duration(milliseconds: 250),
     this.curve = Curves.easeInOut,
     this.translationOffset = 200,
@@ -28,24 +30,29 @@ class AnimatedSliverExpandable extends StatefulWidget {
 
 class _AnimatedSliverExpandableState extends State<AnimatedSliverExpandable>
     with SingleTickerProviderStateMixin {
-  late final controller = AnimationController(vsync: this);
+  late final controller = AnimationController(
+    vsync: this,
+    value: widget.expanded ? 1 : 0,
+  );
 
-  void _onToggle() {
-    if (controller.status == AnimationStatus.completed ||
-        controller.status == AnimationStatus.forward) {
-      controller.animateBack(0, duration: widget.duration);
-    } else {
-      controller.animateTo(1, duration: widget.duration);
+  @override
+  void didUpdateWidget(covariant AnimatedSliverExpandable oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (oldWidget.expanded != widget.expanded) {
+      if (widget.expanded) {
+        controller.animateBack(1, duration: widget.duration);
+      } else {
+        controller.animateTo(0, duration: widget.duration);
+      }
     }
   }
 
   @override
   Widget build(BuildContext context) {
-    final curvedAnimation =
-        CurvedAnimation(curve: widget.curve, parent: controller);
+    final animation = CurvedAnimation(curve: widget.curve, parent: controller);
     return SliverExpandable(
-      animation: curvedAnimation,
-      header: widget.headerBuilder(context, curvedAnimation, _onToggle),
+      animation: animation,
+      header: widget.headerBuilder?.call(context, animation),
       sliver: widget.sliver,
     );
   }
@@ -53,12 +60,13 @@ class _AnimatedSliverExpandableState extends State<AnimatedSliverExpandable>
 
 class SliverExpandable extends RenderObjectWidget {
   final Animation<double> animation;
-  final Widget header, sliver;
+  final Widget? header;
+  final Widget sliver;
   final double translationOffset;
 
   const SliverExpandable({
     super.key,
-    required this.header,
+    this.header,
     required this.sliver,
     required this.animation,
     this.translationOffset = 200,
