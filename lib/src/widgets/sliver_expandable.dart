@@ -30,32 +30,30 @@ class AnimatedSliverExpandable extends StatefulWidget {
 
 class _AnimatedSliverExpandableState extends State<AnimatedSliverExpandable>
     with SingleTickerProviderStateMixin {
-  late final controller = AnimationController(
-    vsync: this,
-    value: widget.expanded ? 1 : 0,
-  );
+  late final _controller =
+      AnimationController(vsync: this, value: widget.expanded ? 1 : 0);
+  late CurvedAnimation _animation =
+      CurvedAnimation(curve: widget.curve, parent: _controller);
 
   @override
   void didUpdateWidget(covariant AnimatedSliverExpandable oldWidget) {
     super.didUpdateWidget(oldWidget);
     if (oldWidget.expanded != widget.expanded) {
-      if (widget.expanded) {
-        controller.animateBack(1, duration: widget.duration);
-      } else {
-        controller.animateTo(0, duration: widget.duration);
-      }
+      _controller.animateTo(widget.expanded ? 1 : 0, duration: widget.duration);
+    }
+    if (widget.curve != oldWidget.curve) {
+      _animation.dispose();
+      _animation = CurvedAnimation(curve: widget.curve, parent: _controller);
     }
   }
 
   @override
-  Widget build(BuildContext context) {
-    final animation = CurvedAnimation(curve: widget.curve, parent: controller);
-    return SliverExpandable(
-      animation: animation,
-      header: widget.headerBuilder?.call(context, animation),
-      sliver: widget.sliver,
-    );
-  }
+  Widget build(BuildContext context) => SliverExpandable(
+        animation: _animation,
+        header: widget.headerBuilder?.call(context, _animation),
+        sliver: widget.sliver,
+        translationOffset: widget.translationOffset,
+      );
 }
 
 class SliverExpandable extends RenderObjectWidget {
