@@ -2,14 +2,14 @@
 
 Sliver Expandable lets expand and collapse any Sliver in Flutter.
 
-<img src="screenshots/1.webp" width="300" />
+<img src="https://raw.githubusercontent.com/Taskulu/sliver_expandable/master/screenshots/1.webp" width="300" />
 
 ## Getting started
 
 1. Add it to your `pubspec.yaml`:
 
 ```yaml
-sliver_expandable: ^1.0.0
+sliver_expandable: ^1.1.0
 ```
 
 2. Use it:

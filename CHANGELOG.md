@@ -1,3 +1,10 @@
+## 1.1.0
+
+* Move creation of CurvedAnimation to didUpdateWidget
+* Add sticky header case to example
+* Fix usage without header
+* Fix translationOffset not passed to SliverExpandable by AnimatedSliverExpandable
+
 ## 1.0.0
 
 * Ability to use without a header

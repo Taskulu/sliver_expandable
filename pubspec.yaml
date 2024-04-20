@@ -1,11 +1,11 @@
 name: sliver_expandable
 description: A Sliver Flutter widget that can be used to expand or collapse another child Sliver widget
-version: 1.0.0
+version: 1.1.0
 homepage: https://github.com/Taskulu/sliver_expandable
 repository: https://github.com/Taskulu/sliver_expandable
 issue_tracker: https://github.com/Taskulu/sliver_expandable/issues
 screenshots:
-  - description: 'This screenshot shows an expanding and collapsing SliverList in a CustomScrollView'
+  - description: 'Expanding and collapsing SliverList in a CustomScrollView'
     path: screenshots/1.webp
 topics:
   - sliver
