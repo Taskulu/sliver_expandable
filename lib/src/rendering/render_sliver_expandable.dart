@@ -105,9 +105,11 @@ class RenderSliverExpandable extends RenderSliver with RenderSliverHelpers {
     }
   }
 
-  double get headerExtent => constraints.axis == Axis.vertical
-      ? header!.size.height
-      : header!.size.width;
+  double get headerExtent {
+    if (header == null) return 0;
+    if (constraints.axis == Axis.vertical) return header!.size.height;
+    return header!.size.width;
+  }
 
   Offset get translationOffset {
     final currentOffset = (1 - animation.value) * _maxTranslationOffset;
@@ -125,9 +127,9 @@ class RenderSliverExpandable extends RenderSliver with RenderSliverHelpers {
 
   @override
   void performLayout() {
-    assert(header != null && sliver != null);
+    assert(sliver != null);
     final boxConstraints = constraints.asBoxConstraints();
-    header!.layout(boxConstraints, parentUsesSize: true);
+    header?.layout(boxConstraints, parentUsesSize: true);
     final resolvedHeaderExtent = headerExtent;
     final headerPaintExtent =
         calculatePaintOffset(constraints, from: 0, to: resolvedHeaderExtent);
@@ -204,7 +206,9 @@ class RenderSliverExpandable extends RenderSliver with RenderSliverHelpers {
         sliverPaintOffset = Offset.zero;
         break;
     }
-    getChildParentData(header!).paintOffset = headerPaintOffset;
+    if (header != null) {
+      getChildParentData(header!).paintOffset = headerPaintOffset;
+    }
     getChildParentData(sliver!).paintOffset =
         sliverPaintOffset + translationOffset;
   }
@@ -218,9 +222,11 @@ class RenderSliverExpandable extends RenderSliver with RenderSliverHelpers {
   @override
   void paint(PaintingContext context, Offset offset) {
     if (geometry!.visible) {
-      assert(header != null && sliver != null);
-      context.paintChild(
-          header!, offset + getChildParentData(header!).paintOffset);
+      assert(sliver != null);
+      if (header != null) {
+        context.paintChild(
+            header!, offset + getChildParentData(header!).paintOffset);
+      }
       if (sliver != null && isSliverVisible) {
         final sliverOffset = offset + getChildParentData(sliver!).paintOffset;
         if (animation.value == 1) {
