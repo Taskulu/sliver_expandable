@@ -1,3 +1,8 @@
+## 1.1.1
+
+* Fix hasVisualOverflow
+* Remove unused platform directories
+
 ## 1.1.0
 
 * Move creation of CurvedAnimation to didUpdateWidget
