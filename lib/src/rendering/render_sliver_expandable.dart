@@ -176,7 +176,10 @@ class RenderSliverExpandable extends RenderSliver with RenderSliverHelpers {
       maxPaintExtent: resolvedHeaderExtent + sliverGeometry.maxPaintExtent,
       hitTestExtent:
           headerPaintExtent + animation.value * sliverGeometry.hitTestExtent,
-      hasVisualOverflow: sliverGeometry.hasVisualOverflow,
+      hasVisualOverflow:
+          resolvedHeaderExtent > constraints.remainingPaintExtent ||
+              constraints.scrollOffset > 0 ||
+              sliverGeometry.hasVisualOverflow,
     );
 
     final Offset headerPaintOffset, sliverPaintOffset;
