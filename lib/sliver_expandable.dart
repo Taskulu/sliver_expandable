@@ -1,3 +1,3 @@
-library sliver_expandable;
+library;
 
 export 'src/widgets/sliver_expandable.dart';
