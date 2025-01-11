@@ -48,6 +48,13 @@ class _AnimatedSliverExpandableState extends State<AnimatedSliverExpandable>
   }
 
   @override
+  void dispose() {
+    _animation.dispose();
+    _controller.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) => SliverExpandable(
         animation: _animation,
         header: widget.headerBuilder?.call(context, _animation),
