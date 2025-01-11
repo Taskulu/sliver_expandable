@@ -135,27 +135,34 @@ class RenderSliverExpandable extends RenderSliver with RenderSliverHelpers {
         calculatePaintOffset(constraints, from: 0, to: resolvedHeaderExtent);
     final headerCacheExtent =
         calculateCacheOffset(constraints, from: 0, to: resolvedHeaderExtent);
-    sliver!.layout(
-      constraints.copyWith(
-        scrollOffset:
-            math.max(0, constraints.scrollOffset - resolvedHeaderExtent),
-        cacheOrigin:
-            math.min(0, constraints.cacheOrigin + resolvedHeaderExtent),
-        remainingPaintExtent:
-            math.max(0, constraints.remainingPaintExtent - headerPaintExtent),
-        remainingCacheExtent:
-            math.max(0, constraints.remainingCacheExtent - headerCacheExtent),
-        overlap: math.max(0, constraints.overlap - resolvedHeaderExtent),
-        precedingScrollExtent:
-            constraints.precedingScrollExtent + resolvedHeaderExtent,
-      ),
-      parentUsesSize: true,
-    );
-    final sliverGeometry = sliver!.geometry!;
-    if (sliverGeometry.scrollOffsetCorrection != null) {
-      geometry = SliverGeometry(
-          scrollOffsetCorrection: sliverGeometry.scrollOffsetCorrection);
-      return;
+
+    final SliverGeometry sliverGeometry;
+
+    if (animation.value > 0) {
+      sliver!.layout(
+        constraints.copyWith(
+          scrollOffset:
+              math.max(0, constraints.scrollOffset - resolvedHeaderExtent),
+          cacheOrigin:
+              math.min(0, constraints.cacheOrigin + resolvedHeaderExtent),
+          remainingPaintExtent:
+              math.max(0, constraints.remainingPaintExtent - headerPaintExtent),
+          remainingCacheExtent:
+              math.max(0, constraints.remainingCacheExtent - headerCacheExtent),
+          overlap: math.max(0, constraints.overlap - resolvedHeaderExtent),
+          precedingScrollExtent:
+              constraints.precedingScrollExtent + resolvedHeaderExtent,
+        ),
+        parentUsesSize: true,
+      );
+      sliverGeometry = sliver!.geometry!;
+      if (sliverGeometry.scrollOffsetCorrection != null) {
+        geometry = SliverGeometry(
+            scrollOffsetCorrection: sliverGeometry.scrollOffsetCorrection);
+        return;
+      }
+    } else {
+      sliverGeometry = const SliverGeometry();
     }
 
     final paintExtent = math.min(
@@ -225,8 +232,8 @@ class RenderSliverExpandable extends RenderSliver with RenderSliverHelpers {
 
   @override
   void paint(PaintingContext context, Offset offset) {
+    assert(sliver != null);
     if (geometry!.visible) {
-      assert(sliver != null);
       if (header != null) {
         context.paintChild(
             header!, offset + getChildParentData(header!).paintOffset);
@@ -255,8 +262,10 @@ class RenderSliverExpandable extends RenderSliver with RenderSliverHelpers {
 
   bool get isSliverVisible {
     assert(sliver != null);
-    assert(sliver!.geometry != null);
 
+    if (sliver!.geometry == null) {
+      return false;
+    }
     return animation.value > 0 && sliver!.geometry!.visible;
   }
 
