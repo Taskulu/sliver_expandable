@@ -173,7 +173,8 @@ class RenderSliverExpandable extends RenderSliver with RenderSliverHelpers {
       cacheExtent: math.min(
           headerCacheExtent + (animation.value * sliverGeometry.cacheExtent),
           constraints.remainingCacheExtent),
-      maxPaintExtent: resolvedHeaderExtent + sliverGeometry.maxPaintExtent,
+      maxPaintExtent: resolvedHeaderExtent +
+        (animation.value * sliverGeometry.maxPaintExtent),
       hitTestExtent:
           headerPaintExtent + animation.value * sliverGeometry.hitTestExtent,
       hasVisualOverflow:
