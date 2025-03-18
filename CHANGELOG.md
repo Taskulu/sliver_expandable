@@ -1,3 +1,9 @@
+## 1.1.2
+
+* Fix collapsed maxPaintExtent
+* Dispose animations in AnimatedSliverExpandable
+* Upgrade to Flutter 3.27
+
 ## 1.1.1
 
 * Fix hasVisualOverflow
